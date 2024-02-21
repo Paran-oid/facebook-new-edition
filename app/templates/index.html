@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+    <a href="{{ url_for('index')}}">Home</a>
+    <a href="{{url_for('login')}}">Login</a>
+    <a href="{{url_for('logout')}}">Logout</a>
+    <a href="{{url_for('register')}}">Register</a>
+    <h1>Facebook</h1>
+    {% if current_user.is_authenticated %}
+    <h1>Hi, {{ current_user.username }} !</h1>
+    {% for post in posts %}
+        <div>
+            <p>{{ post.author.username }} says: <b>
+                {{ post.body }} </p>
+            </p>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

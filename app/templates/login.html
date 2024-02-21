@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+    {% block body %}
+        <div>
+            <a href="{{ url_for('index')}}">Home</a>
+            <a href="{{url_for('login')}}">Login</a>
+            <a href="{{url_for('logout')}}">Logout</a>
+            <a href="{{url_for('register')}}">Register</a>
+        </div>
+        <hr>
+        <div>
+            <h1>{{ title }}</h1>
+        </div>
+        <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            {% for field in form if field.widget.input_type!='hidden' %}
+                {% if field.type!='SubmitField' %}
+                    <div class="form-group">
+                        {{ field.label }} : <br>
+                        {{ field (size=32) }}
+                    </div>
+                    {% for error in field.errors %}
+                        <span style="color: red;" >[{{ error }}]</span>
+                    {% endfor %}
+                {% elif field.type=='SubmitField' %}
+                    {{ field }} <br>
+                    {% with messages=get_flashed_messages() %}
+                        {% if messages %}
+                            <span style="color:red;">{{messages}}</span>
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </form>
+    {% endblock %}
