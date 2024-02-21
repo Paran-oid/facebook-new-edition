@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\azizh\OneDrive\Documents\Portfolio\Programming\Projects\Learning Projects\facebook\venv
+set VIRTUAL_ENV=C:\Users\azizh\OneDrive\Documents\Portfolio\Programming\Projects\Learning Projects\facebook-new-edition\venv
 
 if not defined PROMPT set PROMPT=$P$G
 
