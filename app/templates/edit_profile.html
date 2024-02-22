@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block body %}
+    <div>
+        <a href="{{ url_for('index')}}">Home</a>
+        <a href="{{url_for('login')}}">Login</a>
+        <a href="{{url_for('register')}}">Register</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{url_for('logout')}}">Logout</a>
+            <a href="{{url_for('user', username=current_user.username)}}">Profile</a>
+        {% endif %}
+    </div>
+    <h1>Edit Profile</h1>
+    {% with messages=get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}{% if category=='success' %} <span style="color: green;">{{message}}</span> {% endif %}{% endfor %}
+    {% endwith %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.username.label }} <br>
+        {{ form.username }} <br>
+        {% for error in form.username.errors %}
+            <span style="color: red;" >[{{Error}}]</span>
+        {% endfor %}
+
+        {{form.about_me.label}} <br>
+        {{form.about_me(cols=50, rows=4)}} <br>
+        {% for error in form.about_me.errors %}
+            <span style="color: red;" >[{{error}}]</span>
+        {% endfor %}
+        {{form.submit()}}
+    </form>
+{% endblock %}

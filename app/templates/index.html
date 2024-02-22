@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% block body %}
-    <a href="{{ url_for('index')}}">Home</a>
-    <a href="{{url_for('login')}}">Login</a>
-    <a href="{{url_for('logout')}}">Logout</a>
-    <a href="{{url_for('register')}}">Register</a>
+    <div>
+        <div>
+            <a href="{{ url_for('index')}}">Home</a>
+            <a href="{{url_for('login')}}">Login</a>
+            <a href="{{url_for('register')}}">Register</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{url_for('logout')}}">Logout</a>
+                <a href="{{url_for('user', username=current_user.username)}}">Profile</a>
+            {% endif %}
+        </div>
+    </div>
     <h1>Facebook</h1>
     {% if current_user.is_authenticated %}
     <h1>Hi, {{ current_user.username }} !</h1>

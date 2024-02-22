@@ -1,16 +1,26 @@
 {% extends "base.html" %}
     {% block body %}
-        <div>
-            <a href="{{ url_for('index')}}">Home</a>
-            <a href="{{url_for('login')}}">Login</a>
+    <div>
+        <a href="{{ url_for('index')}}">Home</a>
+        <a href="{{url_for('login')}}">Login</a>
+        <a href="{{url_for('register')}}">Register</a>
+        {% if current_user.is_authenticated %}
             <a href="{{url_for('logout')}}">Logout</a>
-            <a href="{{url_for('register')}}">Register</a>
-        </div>
+            <a href="{{url_for('user', username=current_user.username)}}">Profile</a>
+        {% endif %}
+    </div>
         <hr>
         <div>
             <h1>{{ title }}</h1>
         </div>
         <form method="POST" novalidate>
+            {% with messages=get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    {% if category=='success' %}
+                        <span style="color: green;" >{{message}}</span>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
             {{ form.hidden_tag() }}
             {% for field in form if field.widget.input_type!='hidden' %}
                 {% if field.type!='SubmitField' %}
@@ -23,10 +33,12 @@
                     {% endfor %}
                 {% elif field.type=='SubmitField' %}
                     {{ field }} <br>
-                    {% with messages=get_flashed_messages() %}
-                        {% if messages %}
-                            <span style="color:red;">{{messages}}</span>
-                        {% endif %}
+                    {% with messages=get_flashed_messages(with_categories=true) %}
+                        {% for category, message in messages %}
+                            {% if category=='error' %}
+                                <span style="color: red;" >{{message}}</span>
+                            {% endif %}
+                        {% endfor %}
                     {% endwith %}
                 {% endif %}
             </div>
