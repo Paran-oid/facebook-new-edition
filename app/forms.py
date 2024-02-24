@@ -5,6 +5,7 @@ from app import db
 from app.models import User
 import sqlalchemy as sa
 
+
 class Form(FlaskForm):
     username=StringField("Enter username", validators=[DataRequired()])
     password=PasswordField("Enter password", validators=[DataRequired()])
@@ -42,3 +43,7 @@ class EditProfileForm(FlaskForm):
             user=db.session.scalar(sa.select(User).where(User.username==self.username.data))
             if user:
                 raise ValidationError('Please use a different username')
+        
+class EmptyForm(FlaskForm):
+    submit= SubmitField('Submit')
+    
