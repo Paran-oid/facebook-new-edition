@@ -8,18 +8,44 @@
             {% if current_user.is_authenticated %}
                 <a href="{{url_for('logout')}}">Logout</a>
                 <a href="{{url_for('user', username=current_user.username)}}">Profile</a>
+                <a href="{{url_for('explore')}}">Explore</a>
             {% endif %}
         </div>
     </div>
+    <hr>
     <h1>Facebook</h1>
-    {% if current_user.is_authenticated %}
+{% if current_user.is_authenticated %}
+    {% with messages=get_flashed_messages(with_categories=true) %}
+        {% for message, category in messages %}
+                {%if category=='success'%}{{message}}
+            {% endif %}
+        {%endfor%}
+    {% endwith %}
+
     <h1>Hi, {{ current_user.username }} !</h1>
+    {% if form %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.post.label }} <br>
+            {{ form.post(cols=32, rows=4) }}
+            {% for error in form.post.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{form.submit()}}
+        </p>
+    </form>
+    {% endif %}
     {% for post in posts %}
-        <div>
-            <p>{{ post.author.username }} says: <b>
-                {{ post.body }} </p>
-            </p>
-        </div>
+        {% include '_post.html' %}
     {% endfor %}
+    {% if prev_url %}
+        <a href="{{prev_url}}">Newer Posts</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{next_url}}">Older Posts</a>
+    {%endif%}
 {% endif %}
 {% endblock %}
