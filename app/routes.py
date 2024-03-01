@@ -2,10 +2,11 @@ from app import app, db
 import sqlalchemy as sa
 from app.models import User, Post
 from flask import render_template, flash, redirect, url_for, request
-from .forms import Form, RegistrationForm, EditProfileForm, EmptyForm, PostForm
+from .forms import Form, RegistrationForm, EditProfileForm, EmptyForm, PostForm, ForgotPassword, ResetPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
 from urllib.parse import urlsplit
 from datetime import datetime, timezone
+from .email import send_email, send_password_email
 
 @app.route("/", methods=['POST','GET'])
 @login_required
@@ -149,3 +150,28 @@ def unfollow(username):
     else:
         return redirect(url_for('index'))
     
+
+@app.route('/forgot_password', methods=['POST','GET'])
+def forgot_password():
+    form=ForgotPassword()
+    if form.validate_on_submit():
+        email=form.email.data
+        user=db.session.scalar(sa.select(User).where(User.email==email))
+        if user:
+            send_password_email(user)
+        flash('Check your email','email')
+        return redirect(url_for('login'))
+    return render_template('forgot_password.html', form=form)
+
+@app.route('/reset_password/<token>', methods=['POST','GET'])
+def reset_password(token):
+    user=User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form=ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset!','success')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html',form=form)

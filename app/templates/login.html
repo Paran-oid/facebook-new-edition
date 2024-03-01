@@ -18,6 +18,8 @@
                 {% for category, message in messages %}
                     {% if category=='success' %}
                         <span style="color: green;" >{{message}}</span>
+                    {% elif category=='email' %}
+                        <span style="color: chartreuse;" >{{message}}</span>
                     {% endif %}
                 {% endfor %}
             {% endwith %}
@@ -43,5 +45,6 @@
                 {% endif %}
             </div>
             {% endfor %}
+            <a href="{{url_for('forgot_password')}}">Forgot your password?</a>
         </form>
     {% endblock %}
